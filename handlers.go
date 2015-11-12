@@ -5,17 +5,29 @@ import (
 	"net/http"
 )
 
+// CustomerHandler
+// POST:
+//	in:		a CustomerDTO (w/o ID)
+//	out:	new customer and response with CustomerDTO+ID
 func CustomersHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
-		// TODO(danck) business logic
+		//		return CreateCustomer(w, r)
+		return
 	}
 
 	fmt.Fprint(w, http.StatusNotFound)
 }
 
+// OrdersHandler
+// POST		Creates an order for a given customer
+//	in:		OrderDTO, CustomerID
+//	out:	OrderDTO
+// PUT		Signals that an order has been paid
+//	in:		OrderID, AdressDTO
+//	out:
 func OrdersHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
-		// TODO(danck) business logic
+		//
 	}
 	if r.Method == "PUT" {
 		// TODO(danck) business logic
