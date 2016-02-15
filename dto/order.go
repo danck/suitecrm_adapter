@@ -1,4 +1,4 @@
-package order
+package dto
 
 import (
 	"encoding/json"
@@ -15,7 +15,7 @@ func (o Order) JsonString() string {
 	return string(oStr[:])
 }
 
-func New(customerId string) (*Order, error) {
+func NewOrder(customerId string) (*Order, error) {
 	if customerId == "" {
 		return nil, fmt.Errorf("empty name")
 	}

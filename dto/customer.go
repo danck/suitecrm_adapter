@@ -1,4 +1,4 @@
-package customer
+package dto
 
 import (
 	"encoding/json"
@@ -20,7 +20,7 @@ func (c Customer) JsonString() string {
 	return string(cStr[:])
 }
 
-func New(name string, address string) (*Customer, error) {
+func NewCustomer(name string, address string) (*Customer, error) {
 	if name == "" {
 		return nil, fmt.Errorf("empty name")
 	}

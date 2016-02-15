@@ -4,6 +4,7 @@ package main
 
 import (
 	"flag"
+	mw "github.com/danck/hawai-suitecrm/middleware"
 	"log"
 	"net/http"
 )
@@ -40,7 +41,6 @@ func main() {
 	con, err := CreateConnection(*scrmAddr, *scrmUsr, *scrmPwd)
 	if err != nil {
 		log.Fatal(err)
-		return
 	}
 	log.Printf("SuiteCRM connection established. ID %s", con.SessionId)
 
@@ -48,9 +48,9 @@ func main() {
 
 	// Register handlers
 	router := http.NewServeMux()
-	router.HandleFunc("/customers", CustomersHandler)
-	router.HandleFunc("/orders", OrdersHandler)
-	router.HandleFunc("/", DefaultHandler)
+	router.HandleFunc("/customers", mw.ErrorHandler(CustomersHandler))
+	router.HandleFunc("/orders", mw.ErrorHandler(OrdersHandler))
+	router.HandleFunc("/", mw.ErrorHandler(DefaultHandler))
 
 	// Start the server
 	log.Printf("Starting to listen on %s", *listenAddress)

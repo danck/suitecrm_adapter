@@ -88,8 +88,8 @@ func CreateConnection(addr string, user string, pwd string) (*Connection, error)
 
 // Use reconnect() if a connection needs to be reastablished.
 // Each unsuccessful attempt will increment the number of retries stored in the
-// structure.
-// A successful attempt to connect will reset the counter.
+// 'Connection'-structure.
+// A successful connection will reset the counter.
 func (c *Connection) Reconnect() {
 	// TODO(danck):
 	//	con, err := c.CreateConnection(c.)
