@@ -2,20 +2,30 @@ package main
 
 import (
 	"fmt"
+	"github.com/danck/hawai-suitecrm/customer"
+	"github.com/danck/hawai-suitecrm/order"
 	"net/http"
 )
 
-// CustomerHandler
+// CustomersHandler
 // POST:
+//  Creates a customer in SuiteCRM. The ID is set by the CRM.
 //	in:		a CustomerDTO (w/o ID)
 //	out:	new customer and response with CustomerDTO+ID
 func CustomersHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
-		//		return CreateCustomer(w, r)
+		customer, err := customer.New("dummy name", "dummy address")
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Println(customer.JsonString())
+		fmt.Fprintf(w, customer.JsonString())
 		return
 	}
 
-	fmt.Fprint(w, http.StatusNotFound)
+	http.Error(w,
+		http.StatusText(http.StatusNotImplemented),
+		http.StatusNotImplemented)
 }
 
 // OrdersHandler
@@ -27,15 +37,25 @@ func CustomersHandler(w http.ResponseWriter, r *http.Request) {
 //	out:
 func OrdersHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
-		//
+		order, err := order.New("dummy customer id for order")
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Println(order.JsonString())
+		return
 	}
 	if r.Method == "PUT" {
 		// TODO(danck) business logic
 	}
 
-	fmt.Fprint(w, http.StatusNotFound)
+	http.Error(w,
+		http.StatusText(http.StatusNotImplemented),
+		http.StatusNotImplemented)
 }
 
+// DefaultHandler
 func DefaultHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, http.StatusNotFound)
+	http.Error(w,
+		http.StatusText(http.StatusNotImplemented),
+		http.StatusNotImplemented)
 }
