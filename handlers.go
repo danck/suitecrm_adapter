@@ -52,6 +52,7 @@ func OrdersHandler(w http.ResponseWriter, r *http.Request) error {
 	}
 	if r.Method == "PUT" {
 		// TODO(danck) business logic
+		return nil
 	}
 
 	return errtypes.NotImplemented{"Prefix exists, but no matching HTTP method"}

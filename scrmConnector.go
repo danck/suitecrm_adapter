@@ -28,7 +28,9 @@ type LoginData struct {
 	AppName  string   `json:"application_name"`
 }
 
-func CreateConnection(addr string, user string, pwd string) (*Connection, error) {
+func NewConnection(addr string, user string, pwd string) (*Connection, error) {
+	c := Connection{"", nil, 0}
+	// Set up login data
 	h := md5.New()
 	io.WriteString(h, pwd)
 	pwdHashStr := fmt.Sprintf("%x", h.Sum(nil))
@@ -44,6 +46,7 @@ func CreateConnection(addr string, user string, pwd string) (*Connection, error)
 	}
 	restData := string(restDataBytes[:])
 
+	// Set up connection request
 	url, err := url.Parse(addr)
 	if err != nil {
 		log.Fatalf("Illegal URL: %s", err)
@@ -56,9 +59,10 @@ func CreateConnection(addr string, user string, pwd string) (*Connection, error)
 	q.Set("rest_data", restData)
 	url.RawQuery = q.Encode()
 
+	// Connect to SuiteCRM instance
 	tr := &http.Transport{}
-	cl := &http.Client{Transport: tr}
-	resp, err := cl.Get(url.String())
+	c.Client = &http.Client{Transport: tr}
+	resp, err := c.Client.Get(url.String())
 	if err != nil {
 		err = errors.New("Can't connect to SuiteCRM: " + err.Error())
 		return &Connection{}, err
@@ -83,7 +87,8 @@ func CreateConnection(addr string, user string, pwd string) (*Connection, error)
 		err = errors.New("Can't read session id: " + err.Error())
 		return &Connection{}, err
 	}
-	return &Connection{SessionId: sid, Client: cl}, nil
+	c.SessionId = sid
+	return &c, nil
 }
 
 // Use reconnect() if a connection needs to be reastablished.
@@ -100,4 +105,4 @@ func (c *Connection) Reconnect() {
 	//	return con, nil
 }
 
-func (c *Connection) Send() {}
+func (c *Connection) Retrieve() {}

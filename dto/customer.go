@@ -6,13 +6,16 @@ import (
 )
 
 type Customer struct {
-	ID      string
-	Name    string
-	Address string
+	ID        string
+	FirstName string
+	//LastName       string
+	//AccountName    string
+	//EmailAddress   string
+	PrimaryAddress string
 }
 
 func (c Customer) String() string {
-	return fmt.Sprintf("Customer: (ID: %s, Name: %s, Address: %s)", c.ID, c.Name, c.Address)
+	return fmt.Sprintf("Customer: (ID: %s, Name: %s, Address: %s)", c.ID, c.FirstName, c.PrimaryAddress)
 }
 
 func (c Customer) JsonString() string {

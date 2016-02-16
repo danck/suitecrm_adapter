@@ -38,7 +38,7 @@ func main() {
 	flag.Parse()
 
 	// Connect to SuiteCRM
-	con, err := CreateConnection(*scrmAddr, *scrmUsr, *scrmPwd)
+	con, err := NewConnection(*scrmAddr, *scrmUsr, *scrmPwd)
 	if err != nil {
 		log.Fatal(err)
 	}
