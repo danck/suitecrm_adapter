@@ -105,4 +105,6 @@ func (c *Connection) Reconnect() {
 	//	return con, nil
 }
 
-func (c *Connection) Retrieve() {}
+func (c *Connection) Put()  {}
+func (c *Connection) Post() {}
+func (c *Connection) Get()  {}
