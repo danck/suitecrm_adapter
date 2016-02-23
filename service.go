@@ -4,6 +4,8 @@ package main
 
 import (
 	"flag"
+	con "github.com/danck/hawai-suitecrm/connector"
+	h "github.com/danck/hawai-suitecrm/handlers"
 	mw "github.com/danck/hawai-suitecrm/middleware"
 	"log"
 	"net/http"
@@ -37,16 +39,16 @@ func main() {
 	flag.Parse()
 
 	// Connect to SuiteCRM
-	err := Connect(*scrmAddr, *scrmUsr, *scrmPwd)
+	err := con.Connect(*scrmAddr, *scrmUsr, *scrmPwd)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// Register handlers
 	router := http.NewServeMux()
-	router.HandleFunc("/customers", mw.ErrorHandler(CustomersHandler))
-	router.HandleFunc("/orders", mw.ErrorHandler(OrdersHandler))
-	router.HandleFunc("/", mw.ErrorHandler(DefaultHandler))
+	router.HandleFunc("/customers", mw.ErrorHandler(h.CustomersHandler))
+	router.HandleFunc("/orders", mw.ErrorHandler(h.OrdersHandler))
+	router.HandleFunc("/", mw.ErrorHandler(h.DefaultHandler))
 
 	// Start the server
 	log.Printf("Starting to listen on %s", *listenAddress)

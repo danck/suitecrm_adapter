@@ -17,16 +17,25 @@ func ErrorHandler(f func(w http.ResponseWriter, r *http.Request) error) http.Han
 		if err == nil {
 			return
 		}
+
+		var errorName string
+
 		switch err.(type) {
 		case errtypes.BadRequest:
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			errorName = "BadRequest"
+			http.Error(w, errorName+err.Error(), http.StatusBadRequest)
 		case errtypes.NotFound:
-			http.Error(w, err.Error(), http.StatusNotFound)
+			errorName = "NotFound"
+			http.Error(w, errorName+err.Error(), http.StatusNotFound)
+		case errtypes.NotImplemented:
+			errorName = "NotImplemented"
+			http.Error(w, errorName+err.Error(), http.StatusNotImplemented)
 		default:
+			errorName = "InternalError"
 			http.Error(w, "whoopsie", http.StatusInternalServerError)
 		}
 
 		corrId := r.Header.Get(corrIdKey)
-		log.Printf("%s\t%s", corrId, err)
+		log.Printf("%s\t%s\t%s", corrId, errorName, err)
 	}
 }
