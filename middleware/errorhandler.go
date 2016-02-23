@@ -6,6 +6,11 @@ import (
 	"net/http"
 )
 
+var (
+	// Name of the request's correlation id field
+	corrIdKey string = "CorrelationID"
+)
+
 func ErrorHandler(f func(w http.ResponseWriter, r *http.Request) error) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		err := f(w, r)
@@ -18,8 +23,10 @@ func ErrorHandler(f func(w http.ResponseWriter, r *http.Request) error) http.Han
 		case errtypes.NotFound:
 			http.Error(w, err.Error(), http.StatusNotFound)
 		default:
-			log.Println(err)
 			http.Error(w, "whoopsie", http.StatusInternalServerError)
 		}
+
+		corrId := r.Header.Get(corrIdKey)
+		log.Printf("%s\t%s", corrId, err)
 	}
 }

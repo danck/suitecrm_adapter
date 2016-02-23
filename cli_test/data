@@ -2,7 +2,7 @@ method=set_entry
 &input_type=json
 &response_type=json
 &rest_data={
-   "session":"80iudi9khg6hqh0eier6o6s0h2",
+   "session":"ru6m0nhm1d30sd29ksjnfvh007",
    "module_name":"Contacts",
    "name_value_list":[
       {

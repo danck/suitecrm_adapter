@@ -47,7 +47,10 @@ func OrdersHandler(w http.ResponseWriter, r *http.Request) error {
 		if err != nil {
 			return errtypes.BadRequest{err.Error()}
 		}
-		fmt.Println(order.JsonString())
+		resp, err := ConnectionSetEntry("AOS_Invoices", order.JsonString())
+		if resp == nil {
+			return nil
+		}
 		return nil
 	}
 	if r.Method == "PUT" {
@@ -58,7 +61,7 @@ func OrdersHandler(w http.ResponseWriter, r *http.Request) error {
 	return errtypes.NotImplemented{"Prefix exists, but no matching HTTP method"}
 }
 
-// DefaultHandler
+// DefaultHandler gets called to handle requests that don't match a route
 func DefaultHandler(w http.ResponseWriter, r *http.Request) error {
 	return errtypes.NotImplemented{"No matching prefix"}
 }

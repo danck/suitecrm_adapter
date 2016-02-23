@@ -27,24 +27,20 @@ var (
 		"suitecrm-pwd",
 		"admin",
 		"Password of SuiteCRM user")
-)
-
-// Global services
-var (
-	con *Connection
+	logFile = flag.String(
+		"log-file",
+		"hawai-suitecrm.log",
+		"Log file")
 )
 
 func main() {
 	flag.Parse()
 
 	// Connect to SuiteCRM
-	con, err := NewConnection(*scrmAddr, *scrmUsr, *scrmPwd)
+	err := Connect(*scrmAddr, *scrmUsr, *scrmPwd)
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("SuiteCRM connection established. ID %s", con.SessionId)
-
-	// Initialize datatype managers
 
 	// Register handlers
 	router := http.NewServeMux()
