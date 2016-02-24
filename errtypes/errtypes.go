@@ -1,14 +1,17 @@
 package errtypes
 
-// TODO(danck) description
+// BadRequest is used if the incoming payload doesn't comply with the
+// specification
 type BadRequest struct{ Msg string }
 
 func (e BadRequest) Error() string { return e.Msg }
 
-// TODO(danck) description
+// NotFound is used if a request is syntactically correct, but the requested
+// resource does not exist
 type NotFound struct{ error }
 
-// TODO(danck) description
+// NotImplemented is used if calls a function that isn't implemented
+// A function here is specified by the HTTP verb and prefix (i.e. PUT /orders)
 type NotImplemented struct{ Msg string }
 
 func (e NotImplemented) Error() string { return e.Msg }

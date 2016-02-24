@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	con "github.com/danck/hawai-suitecrm/connector"
-	"github.com/danck/hawai-suitecrm/dto"
-	"github.com/danck/hawai-suitecrm/errtypes"
+	con "gitlab.com/danck/hawai-suitecrm/connector"
+	"gitlab.com/danck/hawai-suitecrm/dto"
+	"gitlab.com/danck/hawai-suitecrm/errtypes"
 	"log"
 	"net/http"
 )

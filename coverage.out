@@ -1,0 +1,8 @@
+mode: atomic
+gitlab.com/danck/hawai-suitecrm/dto/address.go:18.39,21.2 2 0
+gitlab.com/danck/hawai-suitecrm/dto/customer.go:19.35,21.2 1 0
+gitlab.com/danck/hawai-suitecrm/dto/customer.go:23.39,26.2 2 0
+gitlab.com/danck/hawai-suitecrm/dto/order.go:13.36,16.2 2 0
+gitlab.com/danck/hawai-suitecrm/dto/order.go:18.50,19.22 1 0
+gitlab.com/danck/hawai-suitecrm/dto/order.go:22.2,22.36 1 0
+gitlab.com/danck/hawai-suitecrm/dto/order.go:19.22,21.3 1 0

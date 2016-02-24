@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/danck/hawai-suitecrm/errtypes"
+	"gitlab.com/danck/hawai-suitecrm/errtypes"
 	"net/http"
 )
 

@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"github.com/danck/hawai-suitecrm/errtypes"
+	"gitlab.com/danck/hawai-suitecrm/errtypes"
 	"log"
 	"net/http"
 )

@@ -4,9 +4,9 @@ package main
 
 import (
 	"flag"
-	con "github.com/danck/hawai-suitecrm/connector"
-	h "github.com/danck/hawai-suitecrm/handlers"
-	mw "github.com/danck/hawai-suitecrm/middleware"
+	con "gitlab.com/danck/hawai-suitecrm/connector"
+	h "gitlab.com/danck/hawai-suitecrm/handlers"
+	mw "gitlab.com/danck/hawai-suitecrm/middleware"
 	"log"
 	"net/http"
 )

@@ -119,7 +119,8 @@ func GetEntry(module string, nameValueList []KeyValuePair) (interface{}, error) 
 
 func send(module string, method string, valueList []KeyValuePair) (interface{}, error) {
 	if Client == nil {
-		log.Fatalf("HTTP Client is nil")
+		err := errors.New("Connection not available: HTTP Client is nil")
+		return nil, err
 	}
 
 	//myNameValueList := []KeyValuePair{
@@ -131,7 +132,6 @@ func send(module string, method string, valueList []KeyValuePair) (interface{}, 
 	restDataJson, err := json.Marshal(r)
 	if err != nil {
 		err := errors.New("illegal JSON format: " + err.Error())
-		log.Println(err.Error())
 		return nil, err
 	}
 	restDataJsonString := string(restDataJson[:])
@@ -141,7 +141,10 @@ func send(module string, method string, valueList []KeyValuePair) (interface{}, 
 	if err != nil {
 		log.Fatalf("Illegal URL: %s", err)
 	}
+
 	Url.Scheme = "http"
+
+	// Assemble query string
 	q := Url.Query()
 	q.Set("method", method)
 	q.Set("input_type", "json")
@@ -149,6 +152,7 @@ func send(module string, method string, valueList []KeyValuePair) (interface{}, 
 	q.Set("rest_data", restDataJsonString)
 	Url.RawQuery = q.Encode()
 
+	// Create and send request
 	req, err := http.NewRequest("POST", Url.String(), nil)
 	if err != nil {
 		return nil, err
@@ -160,6 +164,7 @@ func send(module string, method string, valueList []KeyValuePair) (interface{}, 
 	}
 	defer resp.Body.Close()
 
+	// Handle response
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
