@@ -1,10 +1,10 @@
 FROM golang
 
-ADD . /go/src/gitlab.com/danck/hawai-suitecrm
+ADD . /go/src/HAWAI/repos/hawai-crm
 
-RUN go install gitlab.com/danck/hawai-suitecrm
+RUN go install HAWAI/repos/hawai-crm
 
-ENTRYPOINT /go/bin/hawai-suitecrm \
+ENTRYPOINT /go/bin/hawai-crm \
 	-suitecrm-addr http://192.168.29.131/service/v4_1/rest.php
 
 EXPOSE 8080

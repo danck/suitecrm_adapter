@@ -5,11 +5,11 @@ SHELL := /bin/bash
 .PHONY: clean lint
 
 ROOT := $(shell pwd)
-PACKAGE := gitlab.com/danck/hawai-suitecrm
+PACKAGE := HAWAI/repos/hawai-crm
 
 clean:
 	rm -rf build cover
-	rm hawai-suitecrm
+	rm hawai-crm
 
 build:
 	go build -v
@@ -17,16 +17,16 @@ build:
 rebuild: clean build
 
 test:
-	go test -race ./...
+	go test -v -race ./...
 
 lint:
 	go vet ./...
 	golint ./...
 
 package:
-	sudo docker build -t hawai-suitecrm $(ROOT)
+	sudo docker build -t hawai-crm $(ROOT)
 
 all: clean build lint test package
 
 run:
-	sudo docker run --publish 8080:8080 --name test --rm hawai-suitecrm
+	sudo docker run --publish 8080:8080 --name test --rm hawai-crm
