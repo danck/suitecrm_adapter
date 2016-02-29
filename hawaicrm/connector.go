@@ -14,15 +14,25 @@ import (
 
 var (
 	Addr      string
-	SessionId string
+	SessionID string
 	Client    *http.Client
 )
 
-// Transfer type for SuiteCRM requests
+// Transfer type for SuiteCRM get/set requests
 // A map doesn't work here because order seems to be important
 type RestData struct {
 	Session       string         `json:"session"`
 	ModuleName    string         `json:"module_name"`
+	NameValueList []KeyValuePair `json:"name_value_list"`
+}
+
+// Transfer type for SuiteCRM relationship setting
+type RestRelationData struct {
+	Session       string         `json:"session"`
+	ModuleName    string         `json:"module_name"`
+	ModuleID      string         `json:"module_id"`
+	LinkFieldName string         `json:"link_field_name"`
+	RelatedIDs    []string       `json:"related_ids"`
 	NameValueList []KeyValuePair `json:"name_value_list"`
 }
 
@@ -31,18 +41,18 @@ type KeyValuePair struct {
 	Value string `json:"value"`
 }
 
-// Transfer type for SuiteCRM authentication data
-type AuthData struct {
-	UserName string `json:"user_name"`
-	Password string `json:"password"`
-}
-
+// Transfer type for SuiteCRM session requests
 type LoginData struct {
 	AuthData AuthData `json:"user_auth"`
 	AppName  string   `json:"application_name"`
 }
 
-// Create a connection to SuiteCRM
+type AuthData struct {
+	UserName string `json:"user_name"`
+	Password string `json:"password"`
+}
+
+// Connect creates a connection to SuiteCRM
 func Connect(addr string, user string, pwd string) error {
 	Addr = addr
 
@@ -63,28 +73,28 @@ func Connect(addr string, user string, pwd string) error {
 	restData := string(restDataBytes[:])
 
 	// Set up connection request
-	Url, err := url.Parse(addr)
+	URL, err := url.Parse(addr)
 	if err != nil {
 		log.Fatalf("Illegal URL: %s", err)
 	}
-	Url.Scheme = "http"
-	q := Url.Query()
+	URL.Scheme = "http"
+	q := URL.Query()
 	q.Set("method", "login")
 	q.Set("input_type", "json")
 	q.Set("response_type", "json")
 	q.Set("rest_data", restData)
-	Url.RawQuery = q.Encode()
+	URL.RawQuery = q.Encode()
 
 	// Connect to SuiteCRM instance
 	tr := &http.Transport{}
 	Client = &http.Client{Transport: tr}
-	resp, err := Client.Get(Url.String())
+	resp, err := Client.Get(URL.String())
 	if err != nil {
 		err = errors.New("Can't connect to SuiteCRM: " + err.Error())
 		return err
 	}
 	defer resp.Body.Close()
-	log.Printf("Connection Query: %s", Url.String())
+	log.Printf("Connection Query: %s", URL.String())
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
@@ -104,56 +114,81 @@ func Connect(addr string, user string, pwd string) error {
 		err = errors.New("Can't read session id: " + err.Error())
 		return err
 	}
-	SessionId = sid
-	log.Printf("Connection established. ID %s", SessionId)
+	SessionID = sid
+	log.Printf("Connection established. ID %s", SessionID)
 	return nil
 }
 
-func SetEntry(module string, nameValueList []KeyValuePair) (interface{}, error) {
-	return send(module, "set_entry", nameValueList)
+// crmSetEntry takes a module and a list of key-value-pairs to create an entry
+func crmSetEntry(module string, nameValueList []KeyValuePair) ([]byte, error) {
+	r := RestData{SessionID, module, nameValueList}
+	restDataJSON, err := json.Marshal(r)
+	if err != nil {
+		err := errors.New("illegal JSON format: " + err.Error())
+		return nil, err
+	}
+	restDataJSONString := string(restDataJSON[:])
+
+	return send(module, "set_entry", restDataJSONString)
 }
 
-func GetEntry(module string, nameValueList []KeyValuePair) (interface{}, error) {
-	return send(module, "get_entry", nameValueList)
+// crmGetEntry takes a module and a list of key-value-pairs to retrieve an entry
+func crmGetEntry(module string, nameValueList []KeyValuePair) ([]byte, error) {
+	r := RestData{SessionID, module, nameValueList}
+	restDataJSON, err := json.Marshal(r)
+	if err != nil {
+		err := errors.New("illegal JSON format: " + err.Error())
+		return nil, err
+	}
+	restDataJSONString := string(restDataJSON[:])
+
+	return send(module, "get_entry", restDataJSONString)
 }
 
-func send(module string, method string, valueList []KeyValuePair) (interface{}, error) {
+// crmSetRelationship takes two modules and IDs to set a relationship between
+// the two or more entities
+func crmSetRelationship(
+	module string,
+	moduleID string,
+	linkFieldName string,
+	relatedIDs []string,
+	nameValueList []KeyValuePair) ([]byte, error) {
+
+	r := RestRelationData{SessionID, module, moduleID, linkFieldName, relatedIDs, nameValueList}
+	restDataJSON, err := json.Marshal(r)
+	if err != nil {
+		err := errors.New("illegal JSON format: " + err.Error())
+		return nil, err
+	}
+	restDataJSONString := string(restDataJSON[:])
+
+	return send(module, "set_relationship", restDataJSONString)
+}
+
+func send(module string, method string, restData string) ([]byte, error) {
 	if Client == nil {
 		err := errors.New("Connection not available: HTTP Client is nil")
 		return nil, err
 	}
 
-	//myNameValueList := []KeyValuePair{
-	//	KeyValuePair{"name", "GENERATED BY Proxy"},
-	//	KeyValuePair{"status", "Unpaid"},
-	//}
-
-	r := RestData{SessionId, module, valueList}
-	restDataJson, err := json.Marshal(r)
+	URL, err := url.Parse(Addr)
 	if err != nil {
-		err := errors.New("illegal JSON format: " + err.Error())
+		err := errors.New("Illegal URL: " + err.Error())
 		return nil, err
 	}
-	restDataJsonString := string(restDataJson[:])
-	log.Printf("restDataJsonString: %s", restDataJsonString)
 
-	Url, err := url.Parse(Addr)
-	if err != nil {
-		log.Fatalf("Illegal URL: %s", err)
-	}
-
-	Url.Scheme = "http"
+	URL.Scheme = "http"
 
 	// Assemble query string
-	q := Url.Query()
+	q := URL.Query()
 	q.Set("method", method)
 	q.Set("input_type", "json")
 	q.Set("response_type", "json")
-	q.Set("rest_data", restDataJsonString)
-	Url.RawQuery = q.Encode()
+	q.Set("rest_data", restData)
+	URL.RawQuery = q.Encode()
 
 	// Create and send request
-	req, err := http.NewRequest("POST", Url.String(), nil)
+	req, err := http.NewRequest("POST", URL.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -170,13 +205,13 @@ func send(module string, method string, valueList []KeyValuePair) (interface{}, 
 		return nil, err
 	}
 
-	var responseMap map[string]interface{}
-	err = json.Unmarshal(body, &responseMap)
-	if err != nil {
-		return nil, err
-	}
+	//var responseMap map[string]interface{}
+	//err = json.Unmarshal(body, &responseMap)
+	//if err != nil {
+	//		return "", err
+	//	}
 
-	log.Printf("Sent: %s", Url.String())
+	log.Printf("Sent: %s", URL.String())
 	log.Printf("Received: %s", body)
-	return string(body[:]), nil
+	return body, nil
 }

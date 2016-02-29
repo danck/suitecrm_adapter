@@ -1,0 +1,13 @@
+method=set_relationship
+&input_type=json
+&response_type=json
+&rest_data={
+   "session":"j6l7vbssklbovthi6hfc7aojo5",
+   "module_name":"Accounts",
+	"module_id":"b76d0b16-db3c-f2e6-f367-5649ea9dafa8",
+	"link_field_name":"contacts",
+	"related_ids":["d2c44353-5343-030e-0f2c-5649ea09c549"],
+   "name_value_list":[
+   ],
+   "track_view":false
+}

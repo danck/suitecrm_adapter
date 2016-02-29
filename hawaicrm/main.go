@@ -32,6 +32,7 @@ var (
 		"Log file")
 )
 
+// Main is the main entry point
 func Main() {
 	flag.Parse()
 

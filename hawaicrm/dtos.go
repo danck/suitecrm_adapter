@@ -6,7 +6,7 @@ import (
 )
 
 type Address struct {
-	Id          string `json:"Id"`
+	ID          string `json:"Id"`
 	FirstName   string `json:"FirstName"`
 	LastName    string `json:"LastName"`
 	Street      string `json:"Street"`
@@ -16,7 +16,7 @@ type Address struct {
 	Country     string `json:"Country"`
 }
 
-func (a *Address) JsonString() string {
+func (a *Address) JSONString() string {
 	aStr, _ := json.Marshal(a)
 	return string(aStr[:])
 }
@@ -36,7 +36,7 @@ func (c Customer) String() string {
 	return fmt.Sprintf("Customer: (ID: %s, Name: %s, Address: %s)", c.ID, c.FirstName, c.LastName)
 }
 
-func (c Customer) JsonString() string {
+func (c Customer) JSONString() string {
 	cStr, _ := json.Marshal(c)
 	return string(cStr[:])
 }
@@ -46,14 +46,14 @@ type Order struct {
 	CustomerID string
 }
 
-func (o Order) JsonString() string {
+func (o Order) JSONString() string {
 	oStr, _ := json.Marshal(o)
 	return string(oStr[:])
 }
 
-func NewOrder(customerId string) (*Order, error) {
-	if customerId == "" {
+func NewOrder(customerID string) (*Order, error) {
+	if customerID == "" {
 		return nil, fmt.Errorf("empty name")
 	}
-	return &Order{"", customerId}, nil
+	return &Order{"", customerID}, nil
 }
