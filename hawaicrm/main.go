@@ -6,6 +6,7 @@ import (
 	"flag"
 	"log"
 	"net/http"
+	"os"
 )
 
 // Command line parameters
@@ -36,8 +37,16 @@ var (
 func Main() {
 	flag.Parse()
 
+	f, err := os.OpenFile("proxy.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("error opening log file: %v", err)
+	}
+	defer f.Close()
+	log.SetPrefix("SuiteCRM-Proxy")
+	log.SetOutput(f)
+
 	// Connect to SuiteCRM
-	err := Connect(*scrmAddr, *scrmUsr, *scrmPwd)
+	err = Connect(*scrmAddr, *scrmUsr, *scrmPwd)
 	if err != nil {
 		log.Fatal(err)
 	}

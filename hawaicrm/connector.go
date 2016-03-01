@@ -68,14 +68,14 @@ func Connect(addr string, user string, pwd string) error {
 		},
 	})
 	if err != nil {
-		log.Fatalf("illegal credential format: %s", err)
+		return errors.New("illegal credential format: " + err.Error())
 	}
 	restData := string(restDataBytes[:])
 
 	// Set up connection request
 	URL, err := url.Parse(addr)
 	if err != nil {
-		log.Fatalf("Illegal URL: %s", err)
+		return errors.New("Illegal URL: " + err.Error())
 	}
 	URL.Scheme = "http"
 	q := URL.Query()
@@ -204,12 +204,6 @@ func send(module string, method string, restData string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	//var responseMap map[string]interface{}
-	//err = json.Unmarshal(body, &responseMap)
-	//if err != nil {
-	//		return "", err
-	//	}
 
 	log.Printf("Sent: %s", URL.String())
 	log.Printf("Received: %s", body)
