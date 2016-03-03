@@ -146,15 +146,22 @@ func crmGetEntry(module string, nameValueList []KeyValuePair) ([]byte, error) {
 }
 
 // crmSetRelationship takes two modules and IDs to set a relationship between
-// the two or more entities
+// them
 func crmSetRelationship(
-	module string,
-	moduleID string,
-	linkFieldName string,
-	relatedIDs []string,
+	module string, // Name of the first module (e.g. 'Accounts')
+	moduleID string, // ID of an element of the first module
+	linkFieldName string, // Name of the link field (e.g. 'contacts')
+	relatedIDs []string, // IDs of elements of the link field
 	nameValueList []KeyValuePair) ([]byte, error) {
 
-	r := RestRelationData{SessionID, module, moduleID, linkFieldName, relatedIDs, nameValueList}
+	r := RestRelationData{
+		SessionID,
+		module,
+		moduleID,
+		linkFieldName,
+		relatedIDs,
+		nameValueList}
+
 	restDataJSON, err := json.Marshal(r)
 	if err != nil {
 		err := errors.New("illegal JSON format: " + err.Error())
