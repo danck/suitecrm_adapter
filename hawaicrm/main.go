@@ -38,13 +38,13 @@ func Main() {
 	flag.Parse()
 
 	// Set up logger
-	f, err := os.OpenFile("proxy.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	f, err := os.OpenFile("hawai-crm.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatalf("error opening log file: %v", err)
 	}
 	defer f.Close()
-	log.SetPrefix("SuiteCRM-Proxy")
-	log.SetOutput(f)
+	//log.SetPrefix("SuiteCRM-Proxy")
+	//log.SetOutput(f)
 
 	// Connect to SuiteCRM
 	err = Connect(*scrmAddr, *scrmUsr, *scrmPwd)

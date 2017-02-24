@@ -1,6 +1,6 @@
 package main
 
-import "HAWAI/repos/hawai-crm/hawaicrm"
+import "gitlab.com/danck/hawai-crm/hawaicrm"
 
 func main() {
 	hawaicrm.Main()

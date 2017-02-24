@@ -29,4 +29,4 @@ package:
 all: clean build lint test package
 
 run:
-	sudo docker run --publish 8080:8080 --name test --rm hawai-crm
+	sudo docker run --publish 32001:32001 --name crm --rm hawai-crm
